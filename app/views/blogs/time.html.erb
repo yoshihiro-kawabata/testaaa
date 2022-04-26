@@ -1,0 +1,107 @@
+<div id="timer">00:00</div>
+
+<div id="controls">
+  <div class="box">
+    <button id="min">分</button>
+    <button id="sec">秒</button>
+  </div>
+  <div class="box">
+    <button id="start">スタート</button>
+    <button id="reset">リセット</button>
+  </div>
+</div>
+
+<script>
+
+sec.addEventListener('click', function () {
+        if (isRunning === true) {
+            return;
+        }
+
+        timeToCountDown += 1000;
+
+        if (timeToCountDown >= 60 * 60 * 1000) {
+            timeToCountDown = 0;
+        }
+
+        updateTimer(timeToCountDown);
+});
+
+
+min.addEventListener('click', function () {
+
+        if (isRunning === true) {
+            return;
+        }
+
+        timeToCountDown += 60 * 1000;
+
+        if (timeToCountDown >= 60 * 60 * 1000) {
+            timeToCountDown = 0;
+        }
+
+        updateTimer(timeToCountDown);
+});    
+
+start.addEventListener('click', function () {
+
+        if (isRunning === false) {
+            isRunning = true;
+
+            start.textContent = 'ストップ';
+            
+            startTime = Date.now();
+
+            countDown();
+
+        } else {
+            isRunning = false;
+
+            start.textContent = 'スタート';
+
+            timeToCountDown = timeLeft;
+
+            clearTimeout(timerId);
+        }
+});
+
+function countDown() {
+        timerId = setTimeout(function () {
+
+            timeLeft = timeToCountDown - (Date.now() - startTime);
+
+            if (timeLeft < 0) {
+                isRunning = false;
+                start.textContent = 'スタート';
+                clearTimeout(timerId);
+                timeLeft = 0;
+
+                timeToCountDown = 0;
+
+                updateTimer(timeLeft);
+
+                return;
+            }
+
+            updateTimer(timeLeft)
+            countDown();
+
+        }, 10);
+
+}
+
+
+function updateTimer(t) {
+        var d = new Date(t);
+        var m = d.getMinutes();
+        var s = d.getSeconds();
+
+        m = ('0' + m).slice(-2);
+        s = ('0' + s).slice(-2);
+        timer.textContent = m + ':' + s;
+        
+        var title = timer.textContent = m + ':' + s;;
+        document.title = title;
+}
+
+</script>
